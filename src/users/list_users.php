@@ -1,12 +1,12 @@
 <?php   // src/scripts/list_users.php
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 // Carga las variables de entorno
-$dotenv = new \Dotenv\Dotenv(__DIR__ . '/..', \MiW\Results\Utils::getEnvFileName(__DIR__ . '/..'));
+$dotenv = new \Dotenv\Dotenv(__DIR__ . '/../..');
 $dotenv->load();
 
-require_once __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 use MiW\Results\Entity\User;
 
@@ -19,14 +19,15 @@ if (in_array('--json', $argv)) {
     echo json_encode($users, JSON_PRETTY_PRINT);
 } else {
     $items = 0;
-    echo PHP_EOL . sprintf("  %2s: %20s %30s %7s\n", 'Id', 'Username:', 'Email:', 'Enabled:');
+    echo PHP_EOL . sprintf("  %2s: %15s %25s %10s %7s\n", 'Id', 'Username:', 'Email:', 'Password:', 'Enabled:');
     /** @var User $user */
     foreach ($users as $user) {
         echo sprintf(
-            '- %2d: %20s %30s %7s',
+            '- %2d: %15s %25s %10s %7s',
             $user->getId(),
             $user->getUsername(),
             $user->getEmail(),
+            $user->getPassword(),
             ($user->isEnabled()) ? 'true' : 'false'
         ),
         PHP_EOL;
