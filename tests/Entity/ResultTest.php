@@ -8,7 +8,7 @@ use MiW\Results\Entity\User;
 /**
  * Class ResultTest
  *
- * @package MiW\Results\Tests\Entity
+ * @package MiW\Result\Tests\Entity
  */
 class ResultTest extends \PHPUnit\Framework\TestCase
 {

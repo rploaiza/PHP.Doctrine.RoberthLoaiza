@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Class UserTest
  *
- * @package MiW\Results\Tests\Entity
+ * @package MiW\Result\Tests\Entity
  * @group   users
  */
 class UserTest extends TestCase

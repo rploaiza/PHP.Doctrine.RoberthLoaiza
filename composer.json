@@ -16,7 +16,9 @@
     "autoload": {
         "psr-4": {
             "MiW\\Results\\Entity\\": "src/Entity/",
-            "MiW\\Results\\": "src/"
+            "MiW\\Results\\": "src/",
+            "MiW\\Results\\Results\\": "src/results/",
+            "MiW\\Results\\Users\\": "src/users/"
         }
     },
     "autoload-dev": {
