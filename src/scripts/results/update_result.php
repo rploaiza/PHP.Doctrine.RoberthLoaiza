@@ -1,12 +1,12 @@
 <?php // src/update_result.php
 
-require __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../../vendor/autoload.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 use MiW\Results\Entity\Result;
 
 // Carga las variables de entorno
-$dotenv = new \Dotenv\Dotenv(__DIR__ . '/../..');
+$dotenv = new \Dotenv\Dotenv(__DIR__ . '/../../..');
 $dotenv->load();
 
 $script = new UpdateResult($argc, $argv);
@@ -16,6 +16,7 @@ class UpdateResult
 {
     const ID = 1;
     const RESULT = 2;
+    const JSON = '--json';
 
     public function __construct($atributte, $results)
     {
@@ -26,10 +27,12 @@ class UpdateResult
 
     private function information()
     {
-        echo 'Editar Usuario:' . PHP_EOL;
-        echo 'Para editar un usuario ' . basename(__FILE__) . ' id usuario email estado contraseña' . PHP_EOL . PHP_EOL;
-        echo 'Ejemplo: ' . basename(__FILE__) . ' 1 rploaiza pauloaiza@hotmail.es 0 1234567' . PHP_EOL;
-        echo 'Recuerda que el estado puede ser solo entre 0(inactivo) o 1(activo)';
+        echo 'Editar Resultado:' . PHP_EOL;
+        echo 'Para editar un resultado ' . basename(__FILE__) . ' [id_result] [result]' . PHP_EOL . PHP_EOL;
+        echo 'Ejemplo: ' . basename(__FILE__) . ' 1  21234567' . PHP_EOL . PHP_EOL;
+        echo '--json > Otro formato de visualización ' . PHP_EOL;
+        echo 'Ejemplo: ' . basename(__FILE__) . ' 1  21234567  --json' . PHP_EOL . PHP_EOL;
+        echo 'Recuerda que el estado puede ser solo entre 0(inactivo) o 1(activo)'.PHP_EOL;
         exit;
     }
 
@@ -54,14 +57,23 @@ class UpdateResult
         return $result;
     }
 
+    private function toResultado($result){
+
+        if (in_array(UpdateResult::JSON, $this->results, true))
+            echo json_encode($result->jsonSerialize());
+        else
+            echo $result;
+
+    }
+
 
     public function run()
     {
-        if ($this->atributte < 3 || $this->atributte >= 4) {
+        if ($this->atributte < 3 || $this->atributte >= 5) {
             $this->information();
             exit;
         }
 
-        echo $this->update();
+        $this->toResultado($this->update());
     }
 }

@@ -1,13 +1,13 @@
 <?php // src/create_result.php
 
-require __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . '/../../bootstrap.php';
+require __DIR__ . '/../../../vendor/autoload.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 use MiW\Results\Entity\Result;
 use MiW\Results\Entity\User;
 
 // Carga las variables de entorno
-$dotenv = new \Dotenv\Dotenv(__DIR__ . '/../..');
+$dotenv = new \Dotenv\Dotenv(__DIR__ . '/../../..');
 $dotenv->load();
 
 $script = new CreateResult($argc, $argv);
@@ -17,6 +17,7 @@ class CreateResult
 {
     const USER_ID = 1;
     const RESULT = 2;
+    const JSON = '--json';
 
     public function __construct($atributte, $results)
     {
@@ -27,9 +28,11 @@ class CreateResult
 
     private function information()
     {
-        echo 'Nuevo Registro:' . PHP_EOL;
-        echo 'Para crear un nuevo registro ' . basename(__FILE__) . ' id_user registro' . PHP_EOL . PHP_EOL;
-        echo 'Ejemplo: ' . basename(__FILE__) . ' 1 11223344' . PHP_EOL;
+        echo 'Nuevo Resultado:' . PHP_EOL;
+        echo 'Para crear un nuevo registro ' . basename(__FILE__) . ' [id_user] [registro]' . PHP_EOL . PHP_EOL;
+        echo 'Ejemplo: ' . basename(__FILE__) . '  1  11223344' . PHP_EOL . PHP_EOL;
+        echo '--json > Otro formato de visualización ' . PHP_EOL;
+        echo 'Ejemplo: ' . basename(__FILE__) . '  1  11223344  --json' . PHP_EOL;
         exit;
     }
 
@@ -54,14 +57,23 @@ class CreateResult
         return $result;
     }
 
+    private function toResultado($result){
+
+        if (in_array(CreateResult::JSON, $this->results, true))
+            echo json_encode($result->jsonSerialize());
+        else
+            echo $result;
+
+    }
+
 
     public function run()
     {
-        if ($this->atributte < 3|| $this->atributte >= 4) {
+        if ($this->atributte < 3|| $this->atributte >= 5) {
             $this->information();
             exit;
         }
 
-        echo $this->create();
+        $this->toResultado($this->create());
     }
 }
