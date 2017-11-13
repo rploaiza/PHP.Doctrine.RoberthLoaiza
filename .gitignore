@@ -1,7 +1,7 @@
 /vendor/
 /bin/
 /composer.lock
-/.env
+/.env.dist
 /tests/.env.tests
 
 # User-specific stuff:
