@@ -32,9 +32,13 @@ class UserTest extends TestCase
      */
     public function testConstructor()
     {
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        self::assertEquals(0,$this->user->getId());
+        self::assertEmpty($this->user->getUsername());
+        self::assertEmpty($this->user->getPassword());
+        self::assertEmpty($this->user->getToken());
+        self::assertEmpty($this->user->getLastLogin());
+        self::assertEmpty($this->user->getEmail());
+        self::assertFalse(false,$this->user->isEnabled());
     }
 
     /**
@@ -42,9 +46,10 @@ class UserTest extends TestCase
      */
     public function testGetId()
     {
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        static::assertEmpty($this->user->getId());
+        $id = random_int(0,1000);
+        $this->user->setId($id);
+        static ::assertEquals($id, $this->user->getId());
     }
 
     /**
@@ -53,9 +58,10 @@ class UserTest extends TestCase
      */
     public function testGetSetUsername()
     {
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+       static::assertEmpty($this->user->getUsername());
+       $username = 'User'.random_int(0,1000);
+       $this->user->setUsername($username);
+       static ::assertEquals($username, $this->user->getUsername());
     }
 
     /**
@@ -64,9 +70,23 @@ class UserTest extends TestCase
      */
     public function testGetSetEmail()
     {
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        static::assertEmpty($this->user->getEmail());
+        $email = 'pauloaiza@hotmail.es';
+        $this->user->setEmail($email);
+        static ::assertEquals($email, $this->user->getEmail());
+    }
+
+    /**
+     * @covers \MiW\Results\Entity\User::setLastLogin()
+     * @covers \MiW\Results\Entity\User::getLastLogin()
+     */
+    public function testGetSetLastLogin()
+    {
+        static::assertEmpty($this->user->getLastLogin());
+        //$email = 'pauloaiza@hotmail.es';
+        date_format($user->getLastLogin(), 'g:ia \o\n l jS F Y')
+      //  $this->user->setLastLogin(new \DateTime());
+        static ::assertEquals(new \DateTime(), $this->user->getLastLogin());
     }
 
     /**
@@ -81,14 +101,15 @@ class UserTest extends TestCase
     }
 
     /**
-     * @covers \MiW\Results\Entity\User::setAdmin()
-     * @covers \MiW\Results\Entity\User::isAdmin()
+     * @covers \MiW\Results\Entity\User::setToken()
+     * @covers \MiW\Results\Entity\User::getToken()
      */
-    public function testIsSetAdmin()
+    public function testGetSetToken()
     {
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        static::assertEmpty($this->user->getToken());
+        $token = 'ABC'.random_int(0,1000);
+        $this->user->setToken($token);
+        static ::assertEquals($token, $this->user->getToken());
     }
 
     /**
@@ -98,9 +119,10 @@ class UserTest extends TestCase
      */
     public function testGetSetPassword()
     {
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        static::assertEmpty($this->user->getPassword());
+        $password = random_int(0,1000);
+        $this->user->setPassword($password);
+        static ::assertEquals($password, $this->user->getPassword());
     }
 
     /**
@@ -118,8 +140,19 @@ class UserTest extends TestCase
      */
     public function testJsonSerialize()
     {
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
+        $user = new User();
+        $user->setUsername('Roberth');
+        $user->setEmail('pauloaiza@hotmail.es');
+        $user->setEnabled('true');
+        $valores=array(
+            'id'            => $this->user->getId(),
+            'username'      => $user->getUsername(),
+            'email'         => $user->getEmail(),
+            'enabled'       => $user->isEnabled(),
+            'password'      => $this->user->getPassword(),
+            'lastLogin'     => $this->user->getUsername(),
+            'token'         =>$this->user->getToken()
         );
+        self::assertEquals($valores,$user->jsonSerialize());
     }
 }

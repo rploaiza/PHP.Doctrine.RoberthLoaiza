@@ -6,10 +6,7 @@ use Dotenv\Dotenv;
 
 // Load the environment/configuration variables
 // from '.env.tests' or '.env.tests.dist')
-$dotenv = new Dotenv(
-    __DIR__,
-    \MiW\Results\Utils::getEnvFileName(__DIR__, '.env.tests')
-);
+$dotenv = new Dotenv(__DIR__, \MiW\Results\Utils::getEnvFileName(__DIR__, '.env.tests'));
 $dotenv->overload();    // overwrite the db name
 $dotenv->required(
     [
@@ -28,5 +25,3 @@ require_once __DIR__ . '/../bootstrap.php';
 
 mt_srand();
 
-// Create/update tables in the test database
-MiW\Results\Utils::updateSchema();
