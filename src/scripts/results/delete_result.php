@@ -9,8 +9,32 @@ use MiW\Results\Entity\Result;
 $dotenv = new \Dotenv\Dotenv(__DIR__ . '/../../..');
 $dotenv->load();
 
-$script = new DeleteResult($argc, $argv);
-$script->run();
+if (isset($argc) == '' || isset($argv) == '') {
+
+
+    $entityManager = getEntityManager();
+    $result = $entityManager->getRepository(Result::__CLASS__)->findOneBy(array(Result::ID => $_GET['id']));
+
+    if (is_null($result)) {
+        print '<script language="javascript">';
+        print 'alert("No existe id:' . $_GET['id'] . '");';
+        print ' window.location.href = "../../web/result.html";';
+        print '</script>';
+    }
+
+    $id = $result->getId();
+    $entityManager->remove($result);
+    $entityManager->flush();
+    $result->setId($id);
+    print '<script language="javascript">';
+    print 'alert("Eliminado Correctamente");';
+    print ' window.location.href = "../../web/result.html";';
+    print '</script>';
+} else {
+    $script = new DeleteResult($argc, $argv);
+    $script->run();
+}
+
 
 class DeleteResult
 {
@@ -55,7 +79,8 @@ class DeleteResult
         return $result;
     }
 
-    private function toResultado($result){
+    private function toResultado($result)
+    {
 
         if (in_array(DeleteResult::JSON, $this->results, true))
             echo json_encode($result->jsonSerialize());
@@ -67,7 +92,7 @@ class DeleteResult
 
     public function run()
     {
-        if ($this->atributte < 2|| $this->atributte >= 4) {
+        if ($this->atributte < 2 || $this->atributte >= 4) {
             $this->information();
             exit;
         }

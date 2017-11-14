@@ -9,8 +9,33 @@ use MiW\Results\Entity\User;
 $dotenv = new \Dotenv\Dotenv(__DIR__ . '/../../..');
 $dotenv->load();
 
-$script = new UpdateUser($argc, $argv);
-$script->run();
+if (isset($argc)=='' || isset($argv)=='')  {
+    $entityManager = getEntityManager();
+    $user = $entityManager->getRepository(User::class)->findOneBy(array(User::ID => $_POST['id']));
+    if (is_null($user)) {
+        print '<script language="javascript">';
+        print 'alert("No existe id:' . $_POST['id'] . '");';
+        print ' window.location.href = "../../web/index.html";';
+        print '</script>';
+    }
+
+    $user->setUsername($_POST['nombre']);
+    $user->setEmail($_POST['email']);
+    if ($_POST['estado'] == '0' || $_POST['estado'] == '1')
+        $user->setEnabled($_POST['estado']);
+    $user->setPassword($_POST['password']);
+    $user->setLastLogin(new \DateTime());
+    $entityManager->merge($user);
+    $entityManager->flush();
+    print '<script language="javascript">';
+    print 'alert("Actualizado Correctamente");';
+    print ' window.location.href = "../../web/index.html";';
+    print '</script>';
+
+}else{
+    $script = new UpdateUser($argc, $argv);
+    $script->run();
+}
 
 class UpdateUser
 {

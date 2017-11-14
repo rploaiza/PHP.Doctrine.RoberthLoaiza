@@ -9,8 +9,31 @@ use MiW\Results\Entity\Result;
 $dotenv = new \Dotenv\Dotenv(__DIR__ . '/../../..');
 $dotenv->load();
 
-$script = new UpdateResult($argc, $argv);
-$script->run();
+if (isset($argc) == '' || isset($argv) == '') {
+
+    $entityManager = getEntityManager();
+    $result = $entityManager->getRepository(Result::class)->findOneBy(array(Result::ID => $_POST['id']));
+
+    if (is_null($result)) {
+        print '<script language="javascript">';
+        print 'alert("No existe id:' . $_POST['id'] . '");';
+        print ' window.location.href = "../../web/result.html";';
+        print '</script>';
+    }
+
+    $result->setResult($_POST['resultado']);
+    $result->setTime(new \DateTime());
+
+    $entityManager->merge($result);
+    $entityManager->flush();
+    print '<script language="javascript">';
+    print 'alert("Actualizado Correctamente");';
+    print ' window.location.href = "../../web/result.html";';
+    print '</script>';
+} else {
+    $script = new UpdateResult($argc, $argv);
+    $script->run();
+}
 
 class UpdateResult
 {
@@ -32,7 +55,7 @@ class UpdateResult
         echo 'Ejemplo: ' . basename(__FILE__) . ' 1  21234567' . PHP_EOL . PHP_EOL;
         echo '--json > Otro formato de visualización ' . PHP_EOL;
         echo 'Ejemplo: ' . basename(__FILE__) . ' 1  21234567  --json' . PHP_EOL . PHP_EOL;
-        echo 'Recuerda que el estado puede ser solo entre 0(inactivo) o 1(activo)'.PHP_EOL;
+        echo 'Recuerda que el estado puede ser solo entre 0(inactivo) o 1(activo)' . PHP_EOL;
         exit;
     }
 
@@ -41,7 +64,7 @@ class UpdateResult
 
         $id = intval($this->results[UpdateResult::ID]);
         $entityManager = getEntityManager();
-        $result = $entityManager->getRepository(Result::class)->findOneBy(array(Result::ID=> $id));
+        $result = $entityManager->getRepository(Result::class)->findOneBy(array(Result::ID => $id));
 
         if (is_null($result)) {
             echo 'El id:' . $id . ' no existe';
@@ -57,7 +80,8 @@ class UpdateResult
         return $result;
     }
 
-    private function toResultado($result){
+    private function toResultado($result)
+    {
 
         if (in_array(UpdateResult::JSON, $this->results, true))
             echo json_encode($result->jsonSerialize());
