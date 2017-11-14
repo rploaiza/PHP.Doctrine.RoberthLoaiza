@@ -83,10 +83,9 @@ class UserTest extends TestCase
     public function testGetSetLastLogin()
     {
         static::assertEmpty($this->user->getLastLogin());
-        //$email = 'pauloaiza@hotmail.es';
-        date_format($user->getLastLogin(), 'g:ia \o\n l jS F Y')
-      //  $this->user->setLastLogin(new \DateTime());
-        static ::assertEquals(new \DateTime(), $this->user->getLastLogin());
+        $fecha= '2017-11-14 16:17:39';
+        $this->user->setLastLogin($fecha);
+        static ::assertEquals($fecha, $this->user->getLastLogin());
     }
 
     /**
@@ -95,9 +94,10 @@ class UserTest extends TestCase
      */
     public function testIsSetEnabled()
     {
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        static::assertEmpty($this->user->isEnabled());
+        $estado= '0';
+        $this->user->setEnabled($estado);
+        static ::assertEquals($estado, $this->user->isEnabled());
     }
 
     /**
@@ -130,9 +130,16 @@ class UserTest extends TestCase
      */
     public function testToString()
     {
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $user = new User();
+        $user->setUsername(random_int(0,1000));
+        $user->setEmail(random_int(0,1000));
+        $user->setEnabled(true);
+        $user->setPassword(random_int(0,10));
+        $user->setLastLogin(new \DateTime());
+        $user->setToken(random_int(0,1000));
+
+        $attributes = get_object_vars($this->user);
+        self::assertEmpty($attributes,$user->__toString());
     }
 
     /**
