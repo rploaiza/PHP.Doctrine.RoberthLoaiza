@@ -9,8 +9,33 @@ use MiW\Results\Entity\User;
 $dotenv = new \Dotenv\Dotenv(__DIR__ . '/../../..');
 $dotenv->load();
 
-$script = new CreateUser($argc, $argv);
-$script->run();
+if (isset($argc)=='' || isset($argv)=='')  {
+    $user = new User();
+    $user->setUsername($_POST['nombre']);
+    $user->setEmail($_POST['email']);
+    $user->setEnabled(true);
+    $user->setPassword($_POST['password']);
+    $user->setLastLogin(new \DateTime());
+    $user->setToken(CreateUser::token(40));
+    $entityManager = getEntityManager();
+    $users = $entityManager->getRepository(User::class)->findBy(array(User::EMAIL => $user->getEmail()));
+
+    if (!empty($users)) {
+        echo 'Usuario con el email:' . $user->getEmail() . ' ya existe';
+        exit;
+    }
+
+    $entityManager->persist($user);
+    $entityManager->flush();
+    print '<script language="javascript">';
+    print 'alert("Almacenado Correctamente");';
+    print ' window.location.href = "../../web/index.html";';
+    print '</script>';;
+}else{
+    $script = new CreateUser($argc, $argv);
+    $script->run();
+}
+
 
 class CreateUser
 {
@@ -35,7 +60,7 @@ class CreateUser
         exit;
     }
 
-    private function token($code)
+    static function token($code)
     {
         $key = '';
         $pattern = '1234567890AbCdEfGhIjKlMnOpQrStUvWxYz';
@@ -66,6 +91,10 @@ class CreateUser
         return $user;
     }
 
+    private function createWeb(){
+
+    }
+
     private function toResultado($user){
 
         if (in_array(CreateUser::JSON, $this->users, true))
@@ -81,8 +110,9 @@ class CreateUser
         if ($this->atributte < 4 || $this->atributte >= 6) {
             $this->information();
             exit;
+        }else{
+            $this->toResultado($this->create());
         }
 
-        $this->toResultado($this->create());
     }
 }

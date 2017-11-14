@@ -10,8 +10,36 @@ use MiW\Results\Entity\User;
 $dotenv = new \Dotenv\Dotenv(__DIR__ . '/../../..');
 $dotenv->load();
 
-$script = new DeleteUser($argc, $argv);
-$script->run();
+if (isset($argc) == '' || isset($argv) == '') {
+    $entityManager = getEntityManager();
+    $user = $entityManager->getRepository(User::__CLASS__)->findOneBy(array(User::ID => $_GET['id']));
+
+    if (is_null($user)) {
+        print '<script language="javascript">';
+        print 'alert("No existe id:' . $_GET['id'] . '");';
+        print ' window.location.href = "../../web/index.html";';
+        print '</script>';
+    }
+
+    $results = $entityManager->getRepository(Result::__CLASS__)->findBy(array(Result::USER => $user));
+
+    foreach ($results as $result)
+        $entityManager->remove($result);
+    $id = $user->getId();
+    $entityManager->remove($user);
+    $entityManager->flush();
+    $user->setId($id);
+    print '<script language="javascript">';
+    print 'alert("Eliminado Correctamente");';
+    print ' window.location.href = "../../web/index.html";';
+    print '</script>';
+
+
+} else {
+    $script = new DeleteUser($argc, $argv);
+    $script->run();
+
+}
 
 class DeleteUser
 {

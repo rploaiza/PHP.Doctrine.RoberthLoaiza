@@ -9,8 +9,30 @@ use MiW\Results\Entity\User;
 $dotenv = new \Dotenv\Dotenv(__DIR__ . '/../../..');
 $dotenv->load();
 
-$script = new ListUserId($argc, $argv);
-$script->run();
+if (isset($argc) == '' || isset($argv) == '') {
+
+    $entityManager = getEntityManager();
+    $user = $entityManager->getRepository(User::class)->findOneBy(array(User::ID => $_GET['id']));
+    if (empty($user) || $_GET['id'] == null) {
+        print '<script language="javascript">';
+        print 'alert("No existe id:' . $_GET['id'] . '");';
+        print ' window.location.href = "../../web/index.html";';
+        print '</script>';
+    } else {
+        if ($user->isEnabled() == false) {
+            $user->setEnabled('No');
+        } else
+            $user->setEnabled('Si');
+        print '<script language="javascript">';
+        print 'alert("id:' . $user->getId() . ',  username:' . $user->getUsername() . ',  email:' . $user->getEmail() . ',  enabled:' . $user->isEnabled() . ',  password:' . $user->getPassword() . ',  lastLogin:' . date_format($user->getLastLogin(), 'g:ia \o\n l jS F Y') . ',  token:' . $user->getToken() . '");';
+        print ' window.location.href = "../../web/index.html";';
+        print '</script>';
+    }
+} else {
+    $script = new ListUserId($argc, $argv);
+    $script->run();
+}
+
 
 class ListUserId
 {
@@ -37,17 +59,18 @@ class ListUserId
 
     private function select()
     {
-        $filterArgument = $this->users[ListUserId::ID];
+        $id = $this->users[ListUserId::ID];
         $entityManager = getEntityManager();
-        $user = $entityManager->getRepository(User::class)->findOneBy(array(User::ID => $filterArgument));
+        $user = $entityManager->getRepository(User::class)->findOneBy(array(User::ID => $id));
         if (empty($user)) {
-            echo 'El id:' . $filterArgument . ' no existe';
+            echo 'El id:' . $id . ' no existe';
             exit;
         }
         return $user;
     }
 
-    private function toResultado($user){
+    private function toResultado($user)
+    {
 
         if (in_array(ListUserId::JSON, $this->users, true))
             echo json_encode($user->jsonSerialize());
