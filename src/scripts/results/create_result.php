@@ -10,8 +10,32 @@ use MiW\Results\Entity\User;
 $dotenv = new \Dotenv\Dotenv(__DIR__ . '/../../..');
 $dotenv->load();
 
-$script = new CreateResult($argc, $argv);
-$script->run();
+if (isset($argc)=='' || isset($argv)=='')  {
+    $user = new User();
+    $id = $_POST['id'];
+    $result = $_POST['resultado'];
+    $entityManager = getEntityManager();
+    $user = $entityManager->getRepository(get_class($user))->findOneBy(array(User::ID => $id));
+
+    if (is_null($user)) {
+    print '<script language="javascript">';
+    print 'alert("No existe id:' . $_POST['id'] . '");';
+    print ' window.location.href = "../../web/result.html";';
+    print '</script>';
+}
+
+    $result = new Result(new \DateTime(), $user, $result);
+    $entityManager->persist($result);
+    $entityManager->flush();
+    print '<script language="javascript">';
+    print 'alert("Almacenado Correctamente");';
+    print ' window.location.href = "../../web/result.html";';
+    print '</script>';
+}else{
+    $script = new CreateResult($argc, $argv);
+    $script->run();
+}
+
 
 class CreateResult
 {
