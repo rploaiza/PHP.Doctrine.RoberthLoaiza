@@ -22,6 +22,8 @@ class ResultTest extends \PHPUnit\Framework\TestCase
      */
     protected $result;
 
+    protected $resultado;
+
     const USERNAME = 'uSeR ñ¿?Ñ';
     const POINTS = 2017;
     /**
@@ -40,9 +42,10 @@ class ResultTest extends \PHPUnit\Framework\TestCase
     {
         $this->user = new User();
         $this->user->setUsername(self::USERNAME);
-        $result = '13122131';
+        $this->user->setLastLogin(new \DateTime('now'));
+        $this->resultado = random_int(0, 100000);
         $this->_time = new \DateTime('now');
-        $this->result = new Result($this->_time, $this->user, $result);
+        $this->result = new Result($this->_time, $this->user, $this->resultado);
     }
 
     /**
@@ -59,13 +62,11 @@ class ResultTest extends \PHPUnit\Framework\TestCase
     public function testConstructor()
     {
         $time = new \DateTime('now');
-        $resultado = '123456';
-        $this->result = new Result($time, $this->user, $resultado);
-        self::assertEmpty($this->result->getId());
-        self::assertNotEmpty($this->result->getResult());
+        $this->result = new Result($time, $this->user, 0);
+        self::assertEquals(0, $this->result->getId());
+        self::assertEmpty($this->result->getResult());
         self::assertNotEmpty($this->result->getUsers());
-        self::assertEquals($time, $this->result->getTime()
-        );
+        self::assertEquals($time, $this->result->getTime());
     }
 
     /**
@@ -106,7 +107,10 @@ class ResultTest extends \PHPUnit\Framework\TestCase
      */
     public function testUser()
     {
-        self::assertNotEmpty($this->result->getResult());
+        self::assertNotEmpty($this->result->getUsers());
+        $this->result->setUsers($this->user);
+        static::assertEquals($this->user, $this->result->getUsers());
+
     }
 
     /**
@@ -132,13 +136,11 @@ class ResultTest extends \PHPUnit\Framework\TestCase
      */
     public function testTo_String()
     {
-        $result = '1231231312';
-        $resul = new Result($this->_time, $this->user, $result);
-        $resul->setId(random_int(0, 1000));
-        $resul->setResult(random_int(0, 1000));
-        $resul->setTime(new \DateTime('now'));
+        $this->result->setId(random_int(0, 1000));
+        $this->result->setResult(random_int(0, 1000));
+        $this->result->setTime($this->_time);
         $attributes = get_object_vars($this->result);
-        self::assertEmpty($attributes, $resul->__toString());
+        self::assertEmpty($attributes, $this->result->__toString());
     }
 
     /**
@@ -149,14 +151,12 @@ class ResultTest extends \PHPUnit\Framework\TestCase
      */
     public function testJson_Serialize()
     {
-        $result = '13122131';
-        $resul = new Result($this->_time, $this->user, $result);
         $valores = array([
             'id' => $this->result->getId(),
             'result' => $this->result->getResult(),
             'time' => $this->result->getTime(),
             'users_id' => $this->result->getUsers()]
         );
-        self::assertEquals($valores, $resul->jsonSerialize());
+        self::assertEquals($valores, $this->result->jsonSerialize());
     }
 }
