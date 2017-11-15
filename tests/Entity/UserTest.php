@@ -74,7 +74,7 @@ class UserTest extends TestCase
     public function testGetSetEmail()
     {
         static::assertEmpty($this->user->getEmail());
-        $email = 'pauloaiza@hotmail.es';
+        $email = random_int(0,1000).'@hotmail.es';
         $this->user->setEmail($email);
         static::assertEquals($email, $this->user->getEmail());
     }
@@ -110,7 +110,7 @@ class UserTest extends TestCase
     public function testGetSetToken()
     {
         static::assertEmpty($this->user->getToken());
-        $token = 'ABC' . random_int(0, 1000);
+        $token = md5('ABC', 1000);
         $this->user->setToken($token);
         static::assertEquals($token, $this->user->getToken());
     }
@@ -123,7 +123,7 @@ class UserTest extends TestCase
     public function testGetSetPassword()
     {
         static::assertEmpty($this->user->getPassword());
-        $password = random_int(0, 1000);
+        $password = md5('MiW').random_int(0, 1000);
         $this->user->setPassword($password);
         static::assertEquals($password, $this->user->getPassword());
     }
@@ -134,13 +134,12 @@ class UserTest extends TestCase
     public function testToString()
     {
 
-        // $user = new User();
-        $this->user->setUsername(random_int(0, 10));
-        $this->user->setEmail(random_int(0, 1000));
+        $this->user->setUsername(random_int(0, 10000));
+        $this->user->setEmail(random_int(0, 1000) . '@hotmail.com');
         $this->user->setEnabled(true);
         $this->user->setPassword(random_int(0, 10));
         $this->user->setLastLogin($this->_time);
-        $this->user->setToken(random_int(0, 1000));
+        $this->user->setToken(md5('MiW', 1000));
         $attributes = get_object_vars($this->user);
         self::assertEmpty($attributes, $this->user->__toString());
     }
@@ -150,18 +149,6 @@ class UserTest extends TestCase
      */
     public function testJsonSerialize()
     {
-        $user = new User();
-        $user->setUsername('Roberth');
-        $user->setEmail('pauloaiza@hotmail.es');
-        $user->setEnabled('true');
-        $valores = array(['id' => $this->user->getId(),
-            'username' => $user->getUsername(),
-            'email' => $user->getEmail(),
-            'enabled' => $user->isEnabled(),
-            'password' => $this->user->getPassword(),
-            'lastLogin' => $this->user->getLastLogin(),
-            'token' => $this->user->getToken()]
-        );
-        self::assertEquals($valores, $user->jsonSerialize());
+        self::assertJson(json_encode($this->user->jsonSerialize()));
     }
 }
