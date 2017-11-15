@@ -2,7 +2,6 @@
 /bin/
 /composer.lock
 /.env.dist
-/tests/.env.tests
 
 # User-specific stuff:
 .idea/**/workspace.xml
