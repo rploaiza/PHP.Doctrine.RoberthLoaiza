@@ -151,11 +151,11 @@ class ResultTest extends \PHPUnit\Framework\TestCase
     {
         $result = '13122131';
         $resul = new Result($this->_time, $this->user, $result);
-        $valores = array(
+        $valores = array([
             'id' => $this->result->getId(),
             'result' => $this->result->getResult(),
             'time' => $this->result->getTime(),
-            'users_id' => $this->result->getUsers()
+            'users_id' => $this->result->getUsers()]
         );
         self::assertEquals($valores, $resul->jsonSerialize());
     }

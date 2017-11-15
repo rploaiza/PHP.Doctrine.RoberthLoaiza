@@ -19,6 +19,7 @@ class UserTest extends TestCase
     protected $user;
 
     private $_time;
+
     /**
      * Sets up the fixture.
      * This method is called before a test is executed.
@@ -133,7 +134,7 @@ class UserTest extends TestCase
     public function testToString()
     {
 
-       // $user = new User();
+        // $user = new User();
         $this->user->setUsername(random_int(0, 10));
         $this->user->setEmail(random_int(0, 1000));
         $this->user->setEnabled(true);
@@ -153,14 +154,13 @@ class UserTest extends TestCase
         $user->setUsername('Roberth');
         $user->setEmail('pauloaiza@hotmail.es');
         $user->setEnabled('true');
-        $valores = array(
-            'id' => $this->user->getId(),
+        $valores = array(['id' => $this->user->getId(),
             'username' => $user->getUsername(),
             'email' => $user->getEmail(),
             'enabled' => $user->isEnabled(),
             'password' => $this->user->getPassword(),
             'lastLogin' => $this->user->getLastLogin(),
-            'token' => $this->user->getToken()
+            'token' => $this->user->getToken()]
         );
         self::assertEquals($valores, $user->jsonSerialize());
     }

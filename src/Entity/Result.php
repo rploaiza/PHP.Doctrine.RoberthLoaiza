@@ -146,13 +146,13 @@ class Result implements \JsonSerializable
      *
      * @return array
      */
-    public function jsonSerialize(): array
+    public function jsonSerialize()
     {
-        return array(
-            'id' => $this->id,
+        return [['id' => $this->id,
             'users_id' => $this->users,
             'result' => $this->result,
-            'time' => $this->time
-        );
+            'time' => $this->time]
+
+        ];
     }
 }
