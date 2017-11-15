@@ -13,7 +13,7 @@ class Result implements \JsonSerializable
 {
     const __CLASS__ = __CLASS__;
     const DATE_FORMAT = 'Y/m/d H:i:s';
-    const TIME_ATTRIBUTE = 'time';
+    const TIME = 'time';
     const ID = 'id';
     const USER = 'users';
 
@@ -133,7 +133,7 @@ class Result implements \JsonSerializable
         $attributes = get_object_vars($this);
         $toString = '[OK]  ';
         foreach ($attributes as $attributeName => $attributeValue) {
-            if ($attributeName === Result::TIME_ATTRIBUTE)
+            if ($attributeName === Result::TIME)
                 $toString .= ' ' . $attributeName . ':' . date_format($attributeValue, Result::DATE_FORMAT) . ' ';
             else
                 $toString .= ' ' . $attributeName . ':' . $attributeValue . ' ';
