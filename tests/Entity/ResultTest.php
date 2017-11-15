@@ -1,4 +1,4 @@
-<?php   // tests/Entity/ResultTest.php
+<?php // tests/Entity/ResultTest.php
 
 namespace MiW\Results\Tests\Entity;
 
@@ -8,7 +8,7 @@ use MiW\Results\Entity\User;
 /**
  * Class ResultTest
  *
- * @package MiW\Results\Tests\Entity
+ * @package MiW\Result\Tests\Entity
  */
 class ResultTest extends \PHPUnit\Framework\TestCase
 {
@@ -40,12 +40,9 @@ class ResultTest extends \PHPUnit\Framework\TestCase
     {
         $this->user = new User();
         $this->user->setUsername(self::USERNAME);
+        $result = '13122131';
         $this->_time = new \DateTime('now');
-        $this->result = new Result(
-            self::POINTS,
-            $this->user,
-            $this->_time
-        );
+        $this->result = new Result($this->_time, $this->user, $result);
     }
 
     /**
@@ -61,8 +58,13 @@ class ResultTest extends \PHPUnit\Framework\TestCase
      */
     public function testConstructor()
     {
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
+        $time = new \DateTime('now');
+        $resultado = '123456';
+        $this->result = new Result($time, $this->user, $resultado);
+        self::assertEmpty($this->result->getId());
+        self::assertNotEmpty($this->result->getResult());
+        self::assertNotEmpty($this->result->getUsers());
+        self::assertEquals($time, $this->result->getTime()
         );
     }
 
@@ -74,9 +76,10 @@ class ResultTest extends \PHPUnit\Framework\TestCase
      */
     public function testGet_Id()
     {
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        static::assertEmpty($this->result->getId());
+        $id = random_int(0, 1000);
+        $this->result->setId($id);
+        static::assertEquals($id, $this->result->getId());
     }
 
     /**
@@ -88,9 +91,10 @@ class ResultTest extends \PHPUnit\Framework\TestCase
      */
     public function testResult()
     {
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        static::assertNotEmpty($this->result->getResult());
+        $resultado = random_int(0, 1000);
+        $this->result->setResult($resultado);
+        static::assertEquals($resultado, $this->result->getResult());
     }
 
     /**
@@ -102,9 +106,7 @@ class ResultTest extends \PHPUnit\Framework\TestCase
      */
     public function testUser()
     {
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        self::assertNotEmpty($this->result->getResult());
     }
 
     /**
@@ -116,9 +118,10 @@ class ResultTest extends \PHPUnit\Framework\TestCase
      */
     public function testTime()
     {
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        static::assertNotEmpty($this->result->getTime());
+        $fecha = new \DateTime('now');
+        $this->result->setTime($fecha);
+        static::assertEquals($fecha, $this->result->getTime());
     }
 
     /**
@@ -129,9 +132,13 @@ class ResultTest extends \PHPUnit\Framework\TestCase
      */
     public function testTo_String()
     {
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $result = '1231231312';
+        $resul = new Result($this->_time, $this->user, $result);
+        $resul->setId(random_int(0, 1000));
+        $resul->setResult(random_int(0, 1000));
+        $resul->setTime(new \DateTime('now'));
+        $attributes = get_object_vars($this->result);
+        self::assertEmpty($attributes, $resul->__toString());
     }
 
     /**
@@ -142,8 +149,14 @@ class ResultTest extends \PHPUnit\Framework\TestCase
      */
     public function testJson_Serialize()
     {
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
+        $result = '13122131';
+        $resul = new Result($this->_time, $this->user, $result);
+        $valores = array([
+            'id' => $this->result->getId(),
+            'result' => $this->result->getResult(),
+            'time' => $this->result->getTime(),
+            'users_id' => $this->result->getUsers()]
         );
+        self::assertEquals($valores, $resul->jsonSerialize());
     }
 }

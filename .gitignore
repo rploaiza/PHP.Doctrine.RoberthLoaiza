@@ -1,8 +1,7 @@
 /vendor/
 /bin/
 /composer.lock
-/.env
-/tests/.env.tests
+/.env.dist
 
 # User-specific stuff:
 .idea/**/workspace.xml
