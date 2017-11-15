@@ -216,17 +216,18 @@ class User implements \JsonSerializable{
      *
      * @return array
      */
-    public function jsonSerialize(): array
+    public function jsonSerialize()
     {
-        return array(
-            'id'            => $this->id,
-            'username'      => utf8_encode($this->username),
-            'email'         => utf8_encode($this->email),
-            'enabled'       => ($this->enabled) ? 'true' : 'false',
-            'password'      => $this->password,
-            'lastLogin'     => $this->lastLogin,
-            'token'         => $this->token
-        );
+        return [[
+            'id' => $this->getId(),
+            'username' => utf8_encode($this->getUsername()),
+            'email' => utf8_encode($this->getEmail()),
+            'enabled' => ($this->isEnabled()) ? 'true' : 'false',
+            'password' => $this->getPassword(),
+            'lastLogin' => $this->getLastLogin(),
+            'token' => $this->getToken()]
+        ];
+
     }
 
 }
